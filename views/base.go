@@ -14,9 +14,9 @@ import (
 
 var activeTabBorderRight = gloss.Border{
 	Top: "─",
-	Bottom: "",
 	Left: "│",
 	Right: "│",
+	Bottom: "",
 	TopLeft: "╭",
 	TopRight: "╮",
 	BottomLeft: "╯",
@@ -24,9 +24,9 @@ var activeTabBorderRight = gloss.Border{
 }
 var activeTabBorderLeft = gloss.Border{
 	Top: "─",
-	Bottom: "",
 	Left: "│",
 	Right: "│",
+	Bottom: "",
 	TopLeft: "╭",
 	TopRight: "╮",
 	BottomLeft: "│",
@@ -34,9 +34,9 @@ var activeTabBorderLeft = gloss.Border{
 }
 var activeTabBorderMiddle = gloss.Border{
 	Top: "─",
-	Bottom: "",
 	Left: "│",
 	Right: "│",
+	Bottom: "",
 	TopLeft: "╭",
 	TopRight: "╮",
 	BottomLeft: "╯",
@@ -59,7 +59,8 @@ var (
 			Border(gloss.RoundedBorder()).
 			BorderForeground(colorMuted).
 			Padding(0, 1).
-			BorderBottom(false).
+			Margin(2, 0, 0).
+			BorderBottom(true).
 			Foreground(colorMuted)
 
 	windowStyle = gloss.NewStyle().
@@ -67,16 +68,48 @@ var (
 			BorderForeground(colorHighlight).
 			Padding(1, 2).
 			BorderTop(false)
+
+	sidebarStyle = gloss.NewStyle().
+	  Width(30).
+	  Padding(1, 1).
+	  Border(gloss.RoundedBorder()).
+	  BorderRight(true).
+    BorderLeft(false).
+    BorderTop(false).
+    BorderBottom(false).
+    BorderForeground(colorMuted)
+
+	selectedSidebarItemStyle = gloss.NewStyle().
+		Foreground(colorHighlight).
+	  PaddingLeft(1).
+		Bold(true).
+		Border(gloss.NormalBorder(), false, false, false, true).
+		BorderForeground(colorHighlight)
+
+	unselectedSidebarItemStyle = gloss.NewStyle().
+		Foreground(colorMuted).
+	  PaddingLeft(2)
+
+	detailStyle = gloss.NewStyle().
+		Padding(1, 2).
+		Border(gloss.RoundedBorder()).
+	  Align(gloss.Left)
+
+	activeCurrentStyle = gloss.NewStyle().
+		Border(gloss.RoundedBorder()).
+		BorderForeground(colorHighlight).
+		Padding(1).
+		Margin(1)
 )
 
 func getActiveTabBorder(activeTabint int, totalTabs int) gloss.Border {
-	if activeTabint == totalTabs-1 {
-		return activeTabBorderRight
-	} else if activeTabint == 0 {
-		return activeTabBorderLeft
-	} else {
-		return activeTabBorderMiddle
+	switch activeTabint {
+		case totalTabs - 1:
+			return activeTabBorderRight
+		case 0:
+			return activeTabBorderLeft
 	}
+	return activeTabBorderMiddle
 }
 
 func renderInactiveTab(text string, isFirst bool) string {
@@ -85,12 +118,9 @@ func renderInactiveTab(text string, isFirst bool) string {
 	width := gloss.Width(topPart)
 
 	lineChar := "─"
-	var leftCorner string
-
-	if isFirst {
+	leftCorner := "─"
+	if isFirst{
 		leftCorner = "╭"
-	} else {
-		leftCorner = "─"
 	}
 
 	rightCorner := "─"
@@ -105,15 +135,18 @@ func renderInactiveTab(text string, isFirst bool) string {
 type Model struct {
 	report    ch_types.ChaosReport
 	activeTab int
+	subActiveTab int
 	tabs      []string
 	width     int
 	height    int
 	loaded    bool
 	err       error
+
+	applyModel ApplyViewModel
 }
 
-func initialModel() Model {
-	file, err := os.Open("./chaos_report.json")
+func initialModel(report_location string) Model {
+	file, err := os.Open(report_location)
 	var report ch_types.ChaosReport
 	loaded := false
 	if err == nil {
@@ -129,6 +162,8 @@ func initialModel() Model {
 		tabs:      []string{"Apply", "Secrets", "Explain", "Ramble", "Team", "Stats"},
 		loaded:    loaded,
 		err:       err,
+
+		applyModel: *NewApplyViewModel(),
 	}
 }
 
@@ -176,10 +211,12 @@ func (model Model) View() string {
 		Width(model.width - 2).
 		Height(model.height - gloss.Height(header))
 
+	contentHeight := model.height - gloss.Height(header) - 2
+
 	var content string
 	switch model.activeTab {
 	case 0:
-		content = "Apply under construction..."
+		content = model.applyModel.View(model.width - 2, contentHeight)
 	case 1:
 		content = "Secrets under construction..."
 	case 2:
@@ -198,34 +235,47 @@ func (model Model) View() string {
 }
 
 func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		model.width = msg.Width
-		model.height = msg.Height
-		return model, nil
+    switch msg := msg.(type) {
+    case tea.WindowSizeMsg:
+        model.width = msg.Width
+        model.height = msg.Height
+        return model, nil
 
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "ctrl+c", "q":
-			return model, tea.Quit
-		case "right", "l", "tab":
-			model.activeTab++
-			if model.activeTab >= len(model.tabs) {
-				model.activeTab = 0
-			}
-		case "left", "h", "shift+tab":
-			model.activeTab--
-			if model.activeTab < 0 {
-				model.activeTab = len(model.tabs) - 1
-			}
-		}
-	}
-	return model, nil
+    case tea.KeyMsg:
+        if msg.String() == "ctrl+c" || msg.String() == "q" {
+            return model, tea.Quit
+        }
+
+        if !model.applyModel.FocusRight {
+            switch msg.String() {
+            case "right", "l", "tab":
+                model.activeTab++
+                if model.activeTab >= len(model.tabs) {
+                    model.activeTab = 0
+                }
+                return model, nil
+
+            case "left", "h", "shift+tab":
+                model.activeTab--
+                if model.activeTab < 0 {
+                    model.activeTab = len(model.tabs) - 1
+                }
+                return model, nil
+            }
+        }
+    }
+
+    switch model.activeTab {
+    case 0:
+        model.applyModel.Update(msg)
+    }
+
+    return model, nil
 }
 
 func MainView() {
-	p := tea.NewProgram(initialModel(), tea.WithAltScreen())
-	if _, err := p.Run(); err != nil {
+	program := tea.NewProgram(initialModel("./chaos_report.json"), tea.WithAltScreen())
+	if _, err := program.Run(); err != nil {
 		fmt.Printf("Error running program: %v\n", err)
 		os.Exit(1)
 	}
