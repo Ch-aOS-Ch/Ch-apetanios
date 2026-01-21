@@ -1,4 +1,4 @@
-package main
+package views
 
 import (
 	"encoding/json"
@@ -113,7 +113,7 @@ type Model struct {
 }
 
 func initialModel() Model {
-	file, err := os.Open("../chaos_report.json")
+	file, err := os.Open("./chaos_report.json")
 	var report ch_types.ChaosReport
 	loaded := false
 	if err == nil {
@@ -223,7 +223,7 @@ func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return model, nil
 }
 
-func main() {
+func MainView() {
 	p := tea.NewProgram(initialModel(), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("Error running program: %v\n", err)
