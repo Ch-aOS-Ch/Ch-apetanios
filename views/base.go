@@ -51,7 +51,7 @@ var (
 			BorderForeground(colorHighlight).
 			Padding(0, 1).
 			BorderBottom(false).
-			Margin(2, 0, -2).
+			Margin(1, 0, -2).
 			Foreground(colorHighlight).
 			Bold(true)
 
