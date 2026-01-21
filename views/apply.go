@@ -2,19 +2,10 @@ package views
 
 import (
 	"strings"
-
 	tea "github.com/charmbracelet/bubbletea"
 	gloss "github.com/charmbracelet/lipgloss"
 	"fmt"
 )
-
-type ApplyViewModel struct {
-	MenuItems []string
-	Cursor		int
-	FocusRight	bool
-	Tags			[]string
-	SelectedTag int
-}
 
 func NewApplyViewModel() *ApplyViewModel {
 	return &ApplyViewModel{
@@ -23,37 +14,44 @@ func NewApplyViewModel() *ApplyViewModel {
 		FocusRight: false,
 		Tags:      []string{"packages", "services", "network", "users", "firewall"},
 		SelectedTag: 0,
+		CheckedTags: make(map[int]bool),
 	}
 }
 
 func (model *ApplyViewModel) Update(msg tea.Msg) {
 	switch msg := msg.(type) {
-	case tea.KeyMsg:
-		switch msg.String() {
-		case "esc":
-			model.FocusRight = false
-		case "up", "k":
-			if model.FocusRight {
-				if model.Cursor == 0 && model.SelectedTag > 0 {
-					model.SelectedTag--
+				case tea.KeyMsg:
+					switch msg.String() {
+					case "esc":
+						model.FocusRight = false
+					case "up", "k":
+						if model.FocusRight {
+							if model.Cursor == 0 && model.SelectedTag > 0 {
+								model.SelectedTag--
+							}
+						} else if model.Cursor > 0 {
+							model.Cursor--
+						}
+					case "down", "j":
+						if model.FocusRight {
+							if model.Cursor == 0 && model.SelectedTag < len(model.Tags)-1 {
+								model.SelectedTag++
+							}
+						} else if model.Cursor < len(model.MenuItems)-1 {
+							model.Cursor++
+						}
+					case "enter":
+						model.FocusRight = true
+					
+					case " ":
+					if model.FocusRight && model.Cursor == 0 {
+						model.CheckedTags[model.SelectedTag] = !model.CheckedTags[model.SelectedTag]
+				} else if !model.FocusRight {
+					model.FocusRight = true
 				}
-			} else if model.Cursor > 0 {
-				// Navigate Menu
-				model.Cursor--
 			}
-		case "down", "j":
-			if model.FocusRight {
-				if model.Cursor == 0 && model.SelectedTag < len(model.Tags)-1 {
-					model.SelectedTag++
-				}
-			} else if model.Cursor < len(model.MenuItems)-1 {
-				model.Cursor++
-			}
-		case "enter", " ":
-			model.FocusRight = true
 		}
 	}
-}
 
 func (m ApplyViewModel) View(width, height int) string {
     var sidebarRows []string
@@ -75,23 +73,39 @@ func (m ApplyViewModel) View(width, height int) string {
 
     switch m.Cursor {
     case 0:
-        title := "  AVAILABLE TAGS"
-        var list strings.Builder
-        for i, tag := range m.Tags {
-            cursor := "  "
-            style := gloss.NewStyle().Foreground(colorMuted)
-            if i == m.SelectedTag {
-                cursor = "->"
-                style = gloss.NewStyle().Foreground(colorHighlight).Bold(true)
-            }
-            fmt.Fprintf(&list, "%s %s\n", cursor, style.Render(tag))
-        }
-        hint := "Press [ENTER] to focus here, [ESC] to go back"
-        if m.FocusRight { hint = "Press [UP/DOWN] to select, [SPACE] to toggle" }
-        detailContent = fmt.Sprintf("%s\n\n%s\n\n%s", 
-            gloss.NewStyle().Bold(true).Render(title), 
-            list.String(), 
-            gloss.NewStyle().Foreground(colorMuted).Italic(true).Render(hint))
+      title := "  AVAILABLE TAGS"
+      var list strings.Builder
+
+      for i, tag := range m.Tags {
+        cursor := ""
+				if i == m.SelectedTag && m.FocusRight {
+					cursor = "->"
+				}
+
+				checkbox := " "
+				if m.CheckedTags[i] {
+					checkbox = "+"
+				}
+
+				lineStyle := gloss.NewStyle().Foreground(colorMuted)
+				if m.FocusRight && i == m.SelectedTag {
+					lineStyle = gloss.NewStyle().Foreground(colorHighlight).Bold(true)
+				} else if m.CheckedTags[i] {
+					lineStyle = gloss.NewStyle().Foreground(gloss.Color("#00FF00")).Bold(true)
+				}
+
+				fmt.Fprintf(&list, "%s %s %s\n", cursor, lineStyle.Render(checkbox), lineStyle.Render(tag))
+      }
+
+      hint := "Press [ENTER] to focus here, [ESC] to go back"
+		
+      if m.FocusRight { hint = "Press [UP/DOWN] to select, [SPACE] to toggle" }
+
+      detailContent = fmt.Sprintf("%s\n\n%s\n\n%s", 
+          gloss.NewStyle().Bold(true).Render(title), 
+          list.String(), 
+          gloss.NewStyle().Foreground(colorMuted).Italic(true).Render(hint))
+
     case 1:
         detailContent = "  CONFIGURATION\n\n[ ] Verbose Mode\n[x] Dry Run\n\n(Press Enter to edit config)"
     case 2:
