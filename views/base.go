@@ -7,9 +7,9 @@ import (
 	"os"
 	"strings"
 
+	ch_types "github.com/Ch-aOS-Ch/Ch-apetanios/types"
 	tea "github.com/charmbracelet/bubbletea"
 	gloss "github.com/charmbracelet/lipgloss"
-	ch_types "github.com/Ch-aOS-Ch/Ch-apetanios/types"
 )
 
 func getActiveTabBorder(activeTabint int, totalTabs int) gloss.Border {
@@ -65,7 +65,7 @@ func initialModel(report_location string) Model {
 }
 
 func (m Model) Init() tea.Cmd {
-	return nil
+	return FetchRolesCmd()
 }
 
 func (model Model) View() string {

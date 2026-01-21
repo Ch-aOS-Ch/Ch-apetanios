@@ -11,6 +11,11 @@ type ApplyViewModel struct {
 	Tags			[]string
 	SelectedTag int
 	CheckedTags	map[int]bool
+
+	IsRunning bool
+	Output string
+	OutputError error
+	IsLoadingTags bool
 }
 
 type Model struct {
@@ -26,3 +31,12 @@ type Model struct {
 	applyModel ApplyViewModel
 }
 
+type ChaosFinishedMsg struct {
+	err error
+	output string
+}
+
+type ChaosRolesLoadedMsg struct {
+	Tags []string
+	Err   error
+}
