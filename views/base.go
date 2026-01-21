@@ -127,7 +127,7 @@ func initialModel() Model {
 	return Model{
 		report:    report,
 		activeTab: 0,
-		tabs:      []string{"Apply", "Secrets", "Explain", "Ramble", "Team"},
+		tabs:      []string{"Apply", "Secrets", "Explain", "Ramble", "Team", "Stats"},
 		loaded:    loaded,
 		err:       err,
 	}
@@ -189,6 +189,8 @@ func (model Model) View() string {
 		content = "Ramble under construction..."
 	case 4:
 		content = "Team under construction..."
+	case 5:
+		content = "Stats under construction..."
 	}
 
 	window := docStyle.Render(content)
