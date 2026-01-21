@@ -2,7 +2,6 @@ package views
 
 import (
 	"strings"
-	tea "github.com/charmbracelet/bubbletea"
 	gloss "github.com/charmbracelet/lipgloss"
 	"fmt"
 )
@@ -17,41 +16,6 @@ func NewApplyViewModel() *ApplyViewModel {
 		CheckedTags: make(map[int]bool),
 	}
 }
-
-func (model *ApplyViewModel) Update(msg tea.Msg) {
-	switch msg := msg.(type) {
-				case tea.KeyMsg:
-					switch msg.String() {
-					case "esc":
-						model.FocusRight = false
-					case "up", "k":
-						if model.FocusRight {
-							if model.Cursor == 0 && model.SelectedTag > 0 {
-								model.SelectedTag--
-							}
-						} else if model.Cursor > 0 {
-							model.Cursor--
-						}
-					case "down", "j":
-						if model.FocusRight {
-							if model.Cursor == 0 && model.SelectedTag < len(model.Tags)-1 {
-								model.SelectedTag++
-							}
-						} else if model.Cursor < len(model.MenuItems)-1 {
-							model.Cursor++
-						}
-					case "enter":
-						model.FocusRight = true
-					
-					case " ":
-					if model.FocusRight && model.Cursor == 0 {
-						model.CheckedTags[model.SelectedTag] = !model.CheckedTags[model.SelectedTag]
-				} else if !model.FocusRight {
-					model.FocusRight = true
-				}
-			}
-		}
-	}
 
 func (m ApplyViewModel) View(width, height int) string {
     var sidebarRows []string

@@ -51,7 +51,7 @@ var (
 			Border(gloss.RoundedBorder()).
 			BorderForeground(colorMuted).
 			Padding(0, 1).
-			Margin(2, 0, 0).
+			Margin(1, 0, 0).
 			BorderBottom(true).
 			Foreground(colorMuted)
 

@@ -131,44 +131,6 @@ func (model Model) View() string {
 	return gloss.JoinVertical(gloss.Left, header, window)
 }
 
-func (model Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-    switch msg := msg.(type) {
-    case tea.WindowSizeMsg:
-        model.width = msg.Width
-        model.height = msg.Height
-        return model, nil
-
-    case tea.KeyMsg:
-        if msg.String() == "ctrl+c" || msg.String() == "q" {
-            return model, tea.Quit
-        }
-
-        if !model.applyModel.FocusRight {
-            switch msg.String() {
-            case "right", "l", "tab":
-                model.activeTab++
-                if model.activeTab >= len(model.tabs) {
-                    model.activeTab = 0
-                }
-                return model, nil
-
-            case "left", "h", "shift+tab":
-                model.activeTab--
-                if model.activeTab < 0 {
-                    model.activeTab = len(model.tabs) - 1
-                }
-                return model, nil
-            }
-        }
-    }
-
-    switch model.activeTab {
-    case 0:
-        model.applyModel.Update(msg)
-    }
-
-    return model, nil
-}
 
 func MainView() {
 	program := tea.NewProgram(initialModel("./chaos_report.json"), tea.WithAltScreen())
