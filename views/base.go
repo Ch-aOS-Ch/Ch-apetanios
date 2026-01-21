@@ -66,8 +66,7 @@ var (
 			Border(gloss.RoundedBorder()).
 			BorderForeground(colorHighlight).
 			Padding(1, 2).
-			BorderTop(false).
-			Align(gloss.Center)
+			BorderTop(false)
 )
 
 func getActiveTabBorder(activeTabint int, totalTabs int) gloss.Border {
