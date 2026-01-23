@@ -10,7 +10,7 @@ func FetchChaosRoles() []string {
 	path, err := exec.LookPath("chaos")
 	if err != nil || path == "" {path = "/usr/bin/chaos"}
 
-	cmd := exec.Command("python3", "/usr/bin/chaos", "check", "roles", "-j")
+	cmd := exec.Command("sh", "/usr/bin/chaos", "check", "roles", "-j")
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {

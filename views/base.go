@@ -133,7 +133,7 @@ func (model Model) View() string {
 
 
 func MainView() {
-	program := tea.NewProgram(initialModel("./chaos_report.json"), tea.WithAltScreen())
+	program := tea.NewProgram(initialModel("./chaos_logbook.json"), tea.WithAltScreen())
 	if _, err := program.Run(); err != nil {
 		fmt.Printf("Error running program: %v\n", err)
 		os.Exit(1)

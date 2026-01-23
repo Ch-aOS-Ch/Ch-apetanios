@@ -5,7 +5,7 @@
         "successful_operations": 5,
         "failed_operations": 0,
         "status": "success",
-        "total_duration": 3.75321102142334
+        "total_duration": 26.436031579971313
     },
     "hailer": {
         "user": "dexmachina",
@@ -18,13 +18,13 @@
             "changed_operations": 1,
             "successful_operations": 5,
             "failed_operations": 0,
-            "duration": 3.75321102142334,
+            "duration": 26.436031579971313,
             "history": [
                 {
                     "type": "setup_phase",
                     "stage": "connection_and_facts",
-                    "timestamp": 1768996856.1328855,
-                    "duration": 3.1647,
+                    "timestamp": 1769128273.9842217,
+                    "duration": 0.0023,
                     "success": true
                 },
                 {
@@ -54,7 +54,7 @@
                     },
                     "changed": false,
                     "success": true,
-                    "duration": 1.1261,
+                    "duration": 1.0265,
                     "stdout": "",
                     "stderr": "",
                     "retry_statistics": {
@@ -97,7 +97,7 @@
                     },
                     "changed": true,
                     "success": true,
-                    "duration": 0.3121,
+                    "duration": 0.3317,
                     "stdout": "",
                     "stderr": "",
                     "retry_statistics": {
@@ -139,7 +139,7 @@
                     },
                     "changed": false,
                     "success": true,
-                    "duration": 0.5381,
+                    "duration": 9.8202,
                     "stdout": "",
                     "stderr": "",
                     "retry_statistics": {
@@ -181,7 +181,7 @@
                     },
                     "changed": false,
                     "success": true,
-                    "duration": 0.5522,
+                    "duration": 0.7194,
                     "stdout": "",
                     "stderr": "",
                     "retry_statistics": {
@@ -223,7 +223,7 @@
                     },
                     "changed": false,
                     "success": true,
-                    "duration": 1.2247,
+                    "duration": 14.5382,
                     "stdout": "",
                     "stderr": "",
                     "retry_statistics": {
@@ -242,17 +242,69 @@
             ]
         }
     },
+    "streamed_history": [
+        {
+            "type": "progress",
+            "host": "@local",
+            "operation": "Ensure sudo rule 99-charonte-dexmachina",
+            "changed": false,
+            "success": true,
+            "retry_count": 0,
+            "duration": 0.0,
+            "logs": {}
+        },
+        {
+            "type": "progress",
+            "host": "@local",
+            "operation": "Validate sudo rule 99-charonte-dexmachina",
+            "changed": true,
+            "success": true,
+            "retry_count": 0,
+            "duration": 0.0,
+            "logs": {}
+        },
+        {
+            "type": "progress",
+            "host": "@local",
+            "operation": "server.group",
+            "changed": false,
+            "success": true,
+            "retry_count": 0,
+            "duration": 0.0,
+            "logs": {}
+        },
+        {
+            "type": "progress",
+            "host": "@local",
+            "operation": "server.group",
+            "changed": false,
+            "success": true,
+            "retry_count": 0,
+            "duration": 0.0,
+            "logs": {}
+        },
+        {
+            "type": "progress",
+            "host": "@local",
+            "operation": "server.user",
+            "changed": false,
+            "success": true,
+            "retry_count": 0,
+            "duration": 0.0,
+            "logs": {}
+        }
+    ],
     "resource_history": [
         {
             "type": "health_check",
             "host": "@local",
             "stage": "pre_operations",
-            "timestamp": 1768996856.1483831,
+            "timestamp": 1769128273.9892302,
             "metrics": {
-                "cpu_load_1min": 0.7,
-                "cpu_load_5min": 0.87,
-                "ram_percent": 29.6,
-                "ram_used_gb": 4.55,
+                "cpu_load_1min": 0.95,
+                "cpu_load_5min": 1.16,
+                "ram_percent": 49.5,
+                "ram_used_gb": 7.6,
                 "ram_total_gb": 15.37
             }
         },
@@ -260,12 +312,12 @@
             "type": "health_check",
             "host": "@local",
             "stage": "post_operations",
-            "timestamp": 1768996871.036792,
+            "timestamp": 1769128317.8679483,
             "metrics": {
                 "cpu_load_1min": 0.77,
-                "cpu_load_5min": 0.87,
-                "ram_percent": 29.7,
-                "ram_used_gb": 4.57,
+                "cpu_load_5min": 1.06,
+                "ram_percent": 49.6,
+                "ram_used_gb": 7.62,
                 "ram_total_gb": 15.37
             }
         }
@@ -273,39 +325,39 @@
     "operation_summary": {
         "Ensure sudo rule 99-charonte-dexmachina": {
             "count": 1,
-            "total_duration": 1.1261,
-            "average_duration": 1.1261,
-            "p50_duration": 1.1261,
-            "p90_duration": 1.1261,
-            "p95_duration": 1.1261,
-            "p99_duration": 1.1261
+            "total_duration": 1.0265,
+            "average_duration": 1.0265,
+            "p50_duration": 1.0265,
+            "p90_duration": 1.0265,
+            "p95_duration": 1.0265,
+            "p99_duration": 1.0265
         },
         "Validate sudo rule 99-charonte-dexmachina": {
             "count": 1,
-            "total_duration": 0.3121,
-            "average_duration": 0.3121,
-            "p50_duration": 0.3121,
-            "p90_duration": 0.3121,
-            "p95_duration": 0.3121,
-            "p99_duration": 0.3121
+            "total_duration": 0.3317,
+            "average_duration": 0.3317,
+            "p50_duration": 0.3317,
+            "p90_duration": 0.3317,
+            "p95_duration": 0.3317,
+            "p99_duration": 0.3317
         },
         "server.group": {
             "count": 2,
-            "total_duration": 1.0903,
-            "average_duration": 0.5452,
-            "p50_duration": 0.5452,
-            "p90_duration": 0.5508,
-            "p95_duration": 0.5515,
-            "p99_duration": 0.5521
+            "total_duration": 10.5396,
+            "average_duration": 5.2698,
+            "p50_duration": 5.2698,
+            "p90_duration": 8.9101,
+            "p95_duration": 9.3652,
+            "p99_duration": 9.7292
         },
         "server.user": {
             "count": 1,
-            "total_duration": 1.2247,
-            "average_duration": 1.2247,
-            "p50_duration": 1.2247,
-            "p90_duration": 1.2247,
-            "p95_duration": 1.2247,
-            "p99_duration": 1.2247
+            "total_duration": 14.5382,
+            "average_duration": 14.5382,
+            "p50_duration": 14.5382,
+            "p90_duration": 14.5382,
+            "p95_duration": 14.5382,
+            "p99_duration": 14.5382
         }
     }
 }
